@@ -1,26 +1,25 @@
-// import catchAsync from '../../utils/catchAsync'
-// import sendResponse from '../../utils/sendResponse'
-// import httpStatus from 'http-status'
-// import { UserSercive } from './user.service'
+import catchAsync from '../../utils/catchAsync'
+import sendResponse from '../../utils/sendResponse'
+import httpStatus from 'http-status'
+import { UserSercive } from './user.service'
 
-// const register = catchAsync(async (req, res) => {
-//   const { password, customers } = req.body
-//   console.log(req.body)
-//   const result = await UserSercive.registerUser(password, customers)
-//   if (result) {
-//     const { refreshToken } = result
-//     res.cookie('refreshToken', refreshToken, {
-//       httpOnly: true,
-//       secure: true,
-//       sameSite: 'none',
-//     })
-//   }
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     message: 'User created successfully',
-//     data: result,
-//   })
-// })
+const register = catchAsync(async (req, res) => {
+  const result = await UserSercive.registerUser(req.body)
+  if (result) {
+    const { refreshToken } = result
+    res.cookie('refreshToken', refreshToken, {
+      httpOnly: true,
+      secure: true,
+      sameSite: 'none',
+      domain: 'focuslypomo.arviontech.online',
+    })
+  }
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: 'Account created successfully',
+    data: result,
+  })
+})
 
 // const createAdminIntoDB = catchAsync(async (req, res) => {
 //   const { password, admin } = req.body
@@ -41,16 +40,16 @@
 //   })
 // })
 
-// const getMeFromDB = catchAsync(async (req, res) => {
-//   const { _id } = req.user
+const getMeFromDB = catchAsync(async (req, res) => {
+  const { _id } = req.user
 
-//   const result = await UserSercive.getMe(_id)
-//   sendResponse(res, {
-//     statusCode: httpStatus.OK,
-//     message: 'Profile get successfully',
-//     data: result,
-//   })
-// })
+  const result = await UserSercive.getMe(_id)
+  sendResponse(res, {
+    statusCode: httpStatus.OK,
+    message: 'Profile get successfully',
+    data: result,
+  })
+})
 
 // const deleteUser = catchAsync(async (req, res) => {
 //   const { id } = req.params
@@ -62,10 +61,7 @@
 //   })
 // })
 
-// export const UserController = {
-//   register,
-//   createAdminIntoDB,
-//   getAllCustomers,
-//   getMeFromDB,
-//   deleteUser,
-// }
+export const UserController = {
+  register,
+  getMeFromDB,
+}

@@ -1,6 +1,9 @@
+import { Types } from 'mongoose'
+
 type TTasksSatus = 'pending' | 'inProgress' | 'completed'
 
 export interface ITask {
+  userId: Types.ObjectId
   taskName: string
   description?: string
   startTime?: string

@@ -16,6 +16,7 @@ app.use(
       'http://192.168.0.102:3000',
       'http://localhost:5173',
       'http://localhost:5174',
+      'https://focuslypomo.arviontech.online',
     ],
     credentials: true,
   })

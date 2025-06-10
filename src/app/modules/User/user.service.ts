@@ -1,94 +1,66 @@
-// import mongoose, { get } from 'mongoose'
+import mongoose, { get } from 'mongoose'
 
-// import { IUser } from './user.interface'
-// import { User } from './user.model'
-// import { AppError } from '../../Error/AppError'
-// import httpStatus from 'http-status'
+import { IUser } from './user.interface'
+import { User } from './user.model'
+import { AppError } from '../../Error/AppError'
+import httpStatus from 'http-status'
 
-// import { jwtHelper } from '../../utils/jwtHelper'
-// import config from '../../config'
-// import { UserRole } from './user.contant'
-// import { Admin } from '../Admin/admin.model'
-// import { IAdmin } from '../Admin/admin.interface'
+import { jwtHelper } from '../../utils/jwtHelper'
+import config from '../../config'
+import { UserRole } from './user.contant'
+import { Admin } from '../Admin/admin.model'
+import { IAdmin } from '../Admin/admin.interface'
 
-// import { v4 as uuidv4 } from 'uuid'
+import { v4 as uuidv4 } from 'uuid'
 
-// const generateUserId = (name: string): string => {
-//   const cleanName = name.trim().split(' ').join('').toLowerCase()
-//   const shortUuid = uuidv4().slice(0, 6) // keep it short & readable
-//   return `${cleanName}-${shortUuid}`
-// }
+const generateUserId = (name: string): string => {
+  const cleanName = name.trim().split(' ').join('').toLowerCase()
+  const shortUuid = uuidv4().slice(0, 6) // keep it short & readable
+  return `${cleanName}-${shortUuid}`
+}
 
-// //REGISTER
-// const registerUser = async (password: string, payload: ICustomer) => {
-//   const userName = generateUserId(payload.fullName)
+//REGISTER
+const registerUser = async (payload: IUser) => {
+  const userName = generateUserId(payload.fullName)
+  console.log(userName)
 
-//   const userData: Partial<IUser> = {
-//     userId: userName,
-//     email: payload.email,
-//     password,
-//     role: UserRole.CUSTOMER,
-//   }
+  const userData: Partial<IUser> = {
+    userId: userName,
+    fullName: payload.fullName,
+    email: payload.email,
+    password: payload.password,
+    role: UserRole.CONSUMER,
+  }
 
-//   const session = await mongoose.startSession()
+  const createdUser = await User.create(userData)
 
-//   try {
-//     session.startTransaction()
+  const jwtPayload = {
+    _id: createdUser._id,
+    userId: createdUser.userId,
+    fullName: createdUser.fullName,
+    email: createdUser.email,
+    role: createdUser.role,
+  }
 
-//     const createdUser = await User.create([userData], { session })
+  const accessToken = jwtHelper.generateToken(
+    jwtPayload,
+    config.jwt.jwt_access_secret as string,
+    config.jwt.jwt_access_expirein as string
+  )
 
-//     if (!createdUser.length) {
-//       throw new AppError(httpStatus.BAD_REQUEST, 'User creation failed')
-//     }
+  const refreshToken = jwtHelper.generateToken(
+    jwtPayload,
+    config.jwt.jwt_refresh_secret as string,
+    config.jwt.jwt_refresh_expirein as string
+  )
 
-//     payload.user = createdUser[0]._id
+  return {
+    accessToken,
+    refreshToken,
+  }
+}
 
-//     const createdCustomer = await Customers.create([payload], { session })
-
-//     if (!createdCustomer.length) {
-//       throw new AppError(httpStatus.BAD_REQUEST, 'Customer creation failed')
-//     }
-
-//     await session.commitTransaction()
-//     await session.endSession()
-
-//     const jwtPayload = {
-//       _id: createdUser[0]._id,
-//       userId: createdUser[0].userId,
-//       email: createdUser[0].email,
-//       role: createdUser[0].role,
-//     }
-
-//     const accessToken = jwtHelper.generateToken(
-//       jwtPayload,
-//       config.jwt.jwt_access_secret as string,
-//       config.jwt.jwt_access_expirein as string
-//     )
-
-//     const refreshToken = jwtHelper.generateToken(
-//       jwtPayload,
-//       config.jwt.jwt_refresh_secret as string,
-//       config.jwt.jwt_refresh_expirein as string
-//     )
-
-//     return {
-//       accessToken,
-//       refreshToken,
-//     }
-//   } catch (error) {
-//     await session.abortTransaction()
-//     await session.endSession()
-
-//     // console.error('Registration Error:', error)
-
-//     throw new AppError(
-//       httpStatus.BAD_REQUEST,
-//       (error as Error).message || 'Account Registration failed'
-//     )
-//   }
-// }
-
-// //create-admin
+//create-admin
 // const createAdmin = async (password: string, payload: IAdmin) => {
 //   const userName = generateUserId(payload.fullName)
 
@@ -137,33 +109,23 @@
 //   }
 // }
 
-// //get all user
+//get all user
 // const getAllCustomersFromDB = async () => {
 //   const result = await Customers.find().populate('user')
 //   return result
 // }
 
-// //Get me
-// const getMe = async (user: string) => {
-//   const isUserExist = await User.findOne({ _id: user })
-//   if (!isUserExist) {
-//     throw new AppError(httpStatus.BAD_REQUEST, 'User not found')
-//   }
+//Get me
+const getMe = async (user: string) => {
+  const isUserExist = await User.findOne({ _id: user })
+  if (!isUserExist) {
+    throw new AppError(httpStatus.BAD_REQUEST, 'User not found')
+  }
 
-//   if (isUserExist.role === UserRole.ADMIN) {
-//     const getProfile = await Admin.findOne({ user: isUserExist._id }).populate(
-//       'user'
-//     )
-//     return getProfile
-//   } else if (isUserExist.role === UserRole.CUSTOMER) {
-//     const getProfile = await Customers.findOne({
-//       user: isUserExist._id,
-//     }).populate('user')
-//     return getProfile
-//   }
-// }
+  return isUserExist
+}
 
-// //soft delete
+//soft delete
 // const deleteUser = async (id: string) => {
 //   const _id = id
 //   const isUserExist = await User.findById(_id)
@@ -207,10 +169,7 @@
 //   }
 // }
 
-// export const UserSercive = {
-//   registerUser,
-//   createAdmin,
-//   getAllCustomersFromDB,
-//   getMe,
-//   deleteUser,
-// }
+export const UserSercive = {
+  registerUser,
+  getMe,
+}

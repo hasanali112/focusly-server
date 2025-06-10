@@ -4,7 +4,8 @@ import { TaskService } from './task.service'
 
 const createTask = catchAsync(async (req, res) => {
   const payload = req.body
-  const result = await TaskService.taskCreate(payload)
+  const user = req.user
+  const result = await TaskService.taskCreate(user, payload)
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -14,7 +15,8 @@ const createTask = catchAsync(async (req, res) => {
 })
 
 const getTasks = catchAsync(async (req, res) => {
-  const result = await TaskService.allGetTasks(req.query)
+  const user = req.user
+  const result = await TaskService.allGetTasks(user, req.query)
   sendResponse(res, {
     statusCode: 200,
     success: true,

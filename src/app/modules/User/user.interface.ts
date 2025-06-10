@@ -1,14 +1,15 @@
-// import { TStatus } from '../../interface/common.interface'
+import { TStatus } from '../../interface/common.interface'
 
-// type TRole = 'CUSTOMER' | 'ADMIN'
+type TRole = 'CONSUMER' | 'ADMIN'
 
-// export interface IUser {
-//   userId: string
-//   email: string
-//   password: string
-//   needPasswordChange: boolean
-//   passwordChangedAt?: Date
-//   role: TRole
-//   status: TStatus
-//   isDeleted: boolean
-// }
+export interface IUser {
+  userId: string
+  fullName: string
+  email: string
+  password: string
+  needPasswordChange: boolean
+  passwordChangedAt?: Date
+  role: TRole
+  status: TStatus
+  isDeleted: boolean
+}

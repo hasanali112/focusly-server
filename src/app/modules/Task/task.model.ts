@@ -3,6 +3,7 @@ import { ITask } from './task.interface'
 import { tasksEnum } from './task.constant'
 
 const taskSchema = new Schema<ITask>({
+  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
   taskName: { type: String, required: true },
   description: String,
   startTime: { type: String },

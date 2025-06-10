@@ -1,15 +1,24 @@
+import { JwtPayload } from 'jsonwebtoken'
 import QueryBuilder from '../../builder/QueryBuilder'
 import { taskProgess } from './task.constant'
 import { ITask } from './task.interface'
 import { Task } from './task.model'
 
-const taskCreate = async (payload: ITask) => {
-  const result = await Task.create(payload)
+const taskCreate = async (user: JwtPayload, payload: ITask) => {
+  const taskData = {
+    ...payload,
+    userId: user._id,
+  }
+  const result = await Task.create(taskData)
   return result
 }
 
-const allGetTasks = async (query: Record<string, unknown>) => {
-  const taskQuery = await new QueryBuilder(Task.find(), query)
+const allGetTasks = async (
+  user: JwtPayload,
+  query: Record<string, unknown>
+) => {
+  const baseQuery = Task.find({ userId: user._id })
+  const taskQuery = await new QueryBuilder(baseQuery, query)
     .filter()
     .sort()
     .pagination()
