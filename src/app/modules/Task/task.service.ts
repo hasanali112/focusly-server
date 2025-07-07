@@ -3,10 +3,15 @@ import QueryBuilder from '../../builder/QueryBuilder'
 import { taskProgess } from './task.constant'
 import { ITask } from './task.interface'
 import { Task } from './task.model'
+import { dateconverted } from '../../utils/converDateToTime'
 
-const taskCreate = async (payload: ITask) => {
-  console.log(payload)
-  const result = await Task.insertMany(payload)
+const taskCreate = async (payload: any) => {
+  const startedTime = dateconverted(payload.startTime, payload.date)
+  const endedTime = dateconverted(payload.endTime, payload.date)
+  payload.startTime = startedTime
+  payload.endTime = endedTime
+
+  const result = await Task.create(payload)
   return result
 }
 
