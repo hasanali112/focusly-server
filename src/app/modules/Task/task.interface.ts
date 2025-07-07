@@ -3,13 +3,10 @@ import { Types } from 'mongoose'
 type TTasksSatus = 'pending' | 'inProgress' | 'completed'
 
 export interface ITask {
-  userId: Types.ObjectId
-  taskName: string
-  description?: string
-  startTime?: string
-  endTime?: string
+  title: string
+  startTime?: Date
+  endTime?: Date
   date?: Date
-  priority: 'low' | 'medium' | 'high'
   status: TTasksSatus
   workStartTime?: Date
   workEndTime?: Date

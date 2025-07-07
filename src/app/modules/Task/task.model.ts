@@ -3,17 +3,10 @@ import { ITask } from './task.interface'
 import { tasksEnum } from './task.constant'
 
 const taskSchema = new Schema<ITask>({
-  userId: { type: Schema.Types.ObjectId, required: true, ref: 'User' },
-  taskName: { type: String, required: true },
-  description: String,
-  startTime: { type: String },
-  endTime: { type: String },
+  title: { type: String, required: true },
+  startTime: { type: Date },
+  endTime: { type: Date },
   date: { type: Date },
-  priority: {
-    type: String,
-    enum: ['low', 'medium', 'high'],
-    default: 'medium',
-  },
   status: {
     type: String,
     enum: tasksEnum,

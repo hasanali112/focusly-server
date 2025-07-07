@@ -15,7 +15,9 @@ async function main() {
 
     //@ts-ignore
     server = app.listen(port, () => {
-      console.log(`🚀 Shoes server is running at http://192.168.0.102:${port}`)
+      console.log(
+        `🚀 Eficizen server is running at http://192.168.0.102:${port}`
+      )
     })
   } catch (error) {
     console.error('❌ Failed to connect to the database:', error)

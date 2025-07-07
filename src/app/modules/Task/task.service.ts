@@ -4,20 +4,14 @@ import { taskProgess } from './task.constant'
 import { ITask } from './task.interface'
 import { Task } from './task.model'
 
-const taskCreate = async (user: JwtPayload, payload: ITask) => {
-  const taskData = {
-    ...payload,
-    userId: user._id,
-  }
-  const result = await Task.create(taskData)
+const taskCreate = async (payload: ITask) => {
+  console.log(payload)
+  const result = await Task.insertMany(payload)
   return result
 }
 
-const allGetTasks = async (
-  user: JwtPayload,
-  query: Record<string, unknown>
-) => {
-  const baseQuery = Task.find({ userId: user._id })
+const allGetTasks = async (query: Record<string, unknown>) => {
+  const baseQuery = Task.find()
   const taskQuery = await new QueryBuilder(baseQuery, query)
     .filter()
     .sort()

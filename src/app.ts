@@ -13,9 +13,9 @@ app.use(cookieParser())
 app.use(
   cors({
     origin: [
-      'http://192.168.0.102:3000',
       'http://localhost:5173',
       'http://localhost:5174',
+      'http://localhost:5678/workflow/lfpVY8TO0whfdID1',
       'https://focuslypomo.arviontech.online',
     ],
     credentials: true,
@@ -30,7 +30,7 @@ app.get('/', (req: Request, res: Response) => {
   res.status(httpStatus.OK).json({
     statusCode: httpStatus.OK,
     success: true,
-    message: 'Shoes server is running successfully',
+    message: 'Efcizen server is running successfully',
   })
 })
 

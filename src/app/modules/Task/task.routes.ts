@@ -5,8 +5,8 @@ import { UserRole } from '../User/user.contant'
 
 const router = Router()
 
-router.post('/create-task', auth(UserRole.CONSUMER), TaskController.createTask)
-router.get('/get-tasks', auth(UserRole.CONSUMER), TaskController.getTasks)
+router.post('/create-task', TaskController.createTask)
+router.get('/get-tasks', TaskController.getTasks)
 router.get(
   '/get-single-task/:id',
   auth(UserRole.CONSUMER),
