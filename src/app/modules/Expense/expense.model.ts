@@ -4,7 +4,6 @@ import { IExpense } from './expense.interface'
 const expenseSchema = new Schema<IExpense>({
   expenseName: {
     type: String,
-    required: true,
   },
   description: String,
   amount: {
