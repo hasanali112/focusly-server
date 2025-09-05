@@ -6,14 +6,29 @@ import { Task } from './task.model'
 import { dateconverted } from '../../utils/converDateToTime'
 
 const taskCreate = async (payload: any) => {
-  const startedTime = dateconverted(payload.startTime, payload.date)
-  const endedTime = dateconverted(payload.endTime, payload.date)
-  payload.startTime = startedTime
-  payload.endTime = endedTime
+  if (payload.taskName) {
+    payload.title = payload.taskName;
+    delete payload.taskName;
+  }
 
-  const result = await Task.create(payload)
-  return result
-}
+  // Only process time conversion if both time and date are provided
+  if (payload.startTime && payload.date) {
+    const startedTime = dateconverted(payload.startTime, payload.date);
+    payload.startTime = startedTime;
+  }
+  
+  if (payload.endTime && payload.date) {
+    const endedTime = dateconverted(payload.endTime, payload.date);
+    payload.endTime = endedTime;
+  }
+  
+  if (payload.date) {
+    payload.date = new Date(payload.date);
+  }
+
+  const result = await Task.create(payload);
+  return result;
+};
 
 const allGetTasks = async (query: Record<string, unknown>) => {
   const baseQuery = Task.find()
@@ -29,26 +44,15 @@ const allGetTasks = async (query: Record<string, unknown>) => {
   }
 }
 
-const getSingleTask = async (id: string) => {
-  const _id = id
-  const result = await Task.findById(_id).select('workStartTime')
-  return result
-}
+const deleteTask = async (id: string) => {
+  const result = await Task.findByIdAndDelete(id);
+  return result;
+};
 
-const updateTask = async (id: string) => {
-  const _id = id
-  const result = await Task.findByIdAndUpdate(
-    _id,
-    {
-      status: taskProgess.inProgress,
-    },
-    {
-      new: true,
-    }
-  )
-
-  return result
-}
+const updateTask = async (id: string, payload: Partial<ITask>) => {
+  const result = await Task.findByIdAndUpdate(id, payload, { new: true });
+  return result;
+};
 
 const updateStartAndEndTime = async (id: string, payload: ITask) => {
   const _id = id
@@ -82,10 +86,16 @@ const updateStartAndEndTime = async (id: string, payload: ITask) => {
   return result
 }
 
+const getSingleTask = async (id: string) => {
+  const result = await Task.findById(id);
+  return result;
+};
+
 export const TaskService = {
   taskCreate,
   allGetTasks,
   updateTask,
   updateStartAndEndTime,
   getSingleTask,
-}
+  deleteTask,
+};

@@ -53,8 +53,10 @@ class QueryBuilder<T> {
 
   fields() {
     const fields =
-      (this.query.fields as string)?.split(',')?.join(' ') || '-__v'
-    this.modelQuery = this.modelQuery.select(fields)
+      (this.query.fields as string)?.split(',')?.join(' ')
+    if (fields) {
+      this.modelQuery = this.modelQuery.select(fields)
+    }
     return this
   }
 

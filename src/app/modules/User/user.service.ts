@@ -22,7 +22,6 @@ const generateUserId = (name: string): string => {
 //REGISTER
 const registerUser = async (payload: IUser) => {
   const userName = generateUserId(payload.fullName)
-  console.log(userName)
 
   const userData: Partial<IUser> = {
     userId: userName,

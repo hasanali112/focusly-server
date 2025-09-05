@@ -7,20 +7,8 @@ const router = Router()
 
 router.post('/create-task', TaskController.createTask)
 router.get('/get-tasks', TaskController.getTasks)
-router.get(
-  '/get-single-task/:id',
-  auth(UserRole.CONSUMER),
-  TaskController.getSingleTaskIntoDb
-)
-router.patch(
-  '/update-task/:id',
-  auth(UserRole.CONSUMER),
-  TaskController.updateTasks
-)
-router.patch(
-  '/update-start-and-end-time/:id',
-  auth(UserRole.CONSUMER),
-  TaskController.updateStartAndEndtime
-)
+router.get('/get-single-task/:id', TaskController.getSingleTaskIntoDb)
+router.patch('/update-task/:id', TaskController.updateTasks)
+router.delete('/delete-task/:id', TaskController.deleteTask)
 
 export const TaskRoutes = router

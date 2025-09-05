@@ -24,18 +24,18 @@ const getTasks = catchAsync(async (req, res) => {
   })
 })
 
-const getSingleTaskIntoDb = catchAsync(async (req, res) => {
-  const result = await TaskService.getSingleTask(req.params.id)
+const deleteTask = catchAsync(async (req, res) => {
+  const result = await TaskService.deleteTask(req.params.id)
   sendResponse(res, {
     statusCode: 200,
     success: true,
-    message: 'Task get successfully',
+    message: 'Task deleted successfully',
     data: result,
   })
 })
 
 const updateTasks = catchAsync(async (req, res) => {
-  const result = await TaskService.updateTask(req.params.id)
+  const result = await TaskService.updateTask(req.params.id, req.body)
   sendResponse(res, {
     statusCode: 200,
     success: true,
@@ -57,10 +57,21 @@ const updateStartAndEndtime = catchAsync(async (req, res) => {
   })
 })
 
+const getSingleTaskIntoDb = catchAsync(async (req, res) => {
+  const result = await TaskService.getSingleTask(req.params.id)
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: 'Task retrieved successfully',
+    data: result,
+  })
+})
+
 export const TaskController = {
   createTask,
   getTasks,
   updateTasks,
   updateStartAndEndtime,
   getSingleTaskIntoDb,
+  deleteTask,
 }

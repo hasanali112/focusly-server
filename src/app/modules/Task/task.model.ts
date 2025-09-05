@@ -12,9 +12,10 @@ const taskSchema = new Schema<ITask>({
     enum: tasksEnum,
     default: 'pending',
   },
+  priority: { type: String, enum: ['low', 'medium', 'high'] },
   pomodoro: { type: Boolean, default: false },
   workStartTime: { type: Date },
   workEndTime: { type: Date },
-})
+});
 
 export const Task = model<ITask>('Task', taskSchema)
